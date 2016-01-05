@@ -16,6 +16,7 @@ public class SetBudget extends ActionBarActivity {
 
     EditText foodexp, rentexp;
     Button button1;
+    String monthlyexp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,12 +29,15 @@ public class SetBudget extends ActionBarActivity {
 
         button1.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                monthlyexp = "" + (Double.parseDouble(foodexp.getText().toString()) + Double.parseDouble(rentexp.getText().toString()));
                 setResult();/*
                 Intent intent = new Intent(v.getContext(), MainActivity.class);
                 startActivity(intent);
                 finish();*/
             }
         });
+
+
     }
 
 
@@ -62,7 +66,7 @@ public class SetBudget extends ActionBarActivity {
     public void setResult() {
 
         Intent intent = new Intent();
-        intent.putExtra("expenses", rentexp.getText().toString() + " " + foodexp.getText().toString());
+        intent.putExtra("expenses", monthlyexp);
         setResult(RESULT_OK, intent);
         finish();
     }

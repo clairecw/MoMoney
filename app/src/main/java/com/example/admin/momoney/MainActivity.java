@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 
@@ -32,9 +33,10 @@ public class MainActivity extends Activity implements OnClickListener {
     Button button, button2;
     ListView listView;
     String[] values;
-    TextView label;
+    TextView label, label2;
     double balance;
     double rentexp, foodexp, monthlyexp;
+    String test;
     ArrayAdapter<String> adapter;
 
     DecimalFormat df = new DecimalFormat("#.00");
@@ -67,16 +69,12 @@ public class MainActivity extends Activity implements OnClickListener {
         button = (Button) findViewById(R.id.button1);
         button.setOnClickListener(this);
         button2 = (Button) findViewById(R.id.button2);
-        button2.setOnClickListener(new OnClickListener() {
-           public void onClick(View v) {
-               Intent intent = new Intent(v.getContext(), SetBudget.class);
-               startActivityForResult(intent, 1);
-            }
-        });
+        button2.setOnClickListener(this);
         listView = (ListView) findViewById(R.id.list);
         label = (TextView) findViewById(R.id.textView1);
+        label2 = (TextView) findViewById(R.id.textView2);
 
-        label.setText("Current balance: $" + df.format(balance));
+        updateLabels();
 
         adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1, android.R.id.text1, values);
@@ -102,26 +100,20 @@ public class MainActivity extends Activity implements OnClickListener {
 
         });
 
-
-
-
-        //loadSavedPreferences();
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);       // keyboard pops up only when user clicks on it
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        String str = "";
+
+        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1) {
             if (resultCode == RESULT_OK) {
-                str = data.getStringExtra("expenses");
+                String s = data.getStringExtra("expenses");
+                monthlyexp = Double.parseDouble(s);
+                updateLabels();
+                savePreferences("expenses", s);
             }
-
-
         }
-        int n = str.indexOf(" ");
-        rentexp = Double.parseDouble(str.substring(0, n));
-        foodexp = Double.parseDouble(str.substring(n + 1));
-
-        savePreferences("expenses", str);
     }
 
     private void updateList() {
@@ -136,12 +128,15 @@ public class MainActivity extends Activity implements OnClickListener {
                 balance += dues.get(i).getAmt();
             }
         }
+    }
 
+    private void updateLabels() {
+        label.setText("Current balance: $" + df.format(balance));
+        label2.setText("Monthly expenses: $" + df.format(monthlyexp));
     }
 
     private void loadSavedPreferences() {
-        SharedPreferences sharedPreferences = PreferenceManager
-                .getDefaultSharedPreferences(this);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         //String name = sharedPreferences.getString("storedDues", "YourName");
 
@@ -154,19 +149,20 @@ public class MainActivity extends Activity implements OnClickListener {
         for(int i = 0; i < size; i++) {
             dues.add(unparse(sharedPreferences.getString("Status_" + i, null)));
         }
+
+        test = sharedPreferences.getString("expenses", null);
+        monthlyexp = Double.parseDouble(sharedPreferences.getString("expenses", null));
     }
 
     private void loadSavedPreferences(String key) {
-        SharedPreferences sharedPreferences = PreferenceManager
-                .getDefaultSharedPreferences(this);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         String s = sharedPreferences.getString(key, null);
         Toast.makeText(this, s, Toast.LENGTH_LONG).show();
     }
 
     private void savePreferences(String key, boolean value) {
-        SharedPreferences sharedPreferences = PreferenceManager
-                .getDefaultSharedPreferences(this);
-        Editor editor = sharedPreferences.edit();
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = sp.edit();
         editor.putBoolean(key, value);
         editor.commit();
     }
@@ -207,9 +203,8 @@ public class MainActivity extends Activity implements OnClickListener {
     }
 
     private void savePreferences(String key, String value) {
-        SharedPreferences sharedPreferences = PreferenceManager
-                .getDefaultSharedPreferences(this);
-        Editor editor = sharedPreferences.edit();
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = sp.edit();
         editor.putString(key, value);
         editor.commit();
     }
@@ -219,13 +214,19 @@ public class MainActivity extends Activity implements OnClickListener {
         // TODO Auto-generated method stub
 
         //savePreferences("storedDues", editText.getText().toString() + " $5");
+        if (v == button) {
+            savePreferences();
+            updateList();
 
-        savePreferences();
-        updateList();
+            adapter = new ArrayAdapter<String>(this,
+                    android.R.layout.simple_list_item_1, android.R.id.text1, values);
+            adapter.notifyDataSetChanged();
+        }
 
-        adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, android.R.id.text1, values);
-        adapter.notifyDataSetChanged();
+        if (v == button2) {
+            Intent i = new Intent(this, SetBudget.class);
+            startActivityForResult(i, 1);
+        }
 
     }
 
