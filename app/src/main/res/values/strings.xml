@@ -9,4 +9,5 @@
     <string name="title_activity_set_budget">SetBudget</string>
 
     <string name="add_desc">Add</string>
+    <string name="title_activity_wishlist">Wishlist</string>
 </resources>

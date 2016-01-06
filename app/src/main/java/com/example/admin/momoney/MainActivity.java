@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
@@ -30,7 +31,8 @@ import android.widget.Toast;
 public class MainActivity extends Activity implements OnClickListener {
     ArrayList<Due> dues;
     EditText editText;
-    Button button, button2;
+    Button button, button2, button3;        // send, setbudget, wishlist
+    ImageButton toggle;
     ListView listView;
     String[] values;
     TextView label, label2;
@@ -70,9 +72,13 @@ public class MainActivity extends Activity implements OnClickListener {
         button.setOnClickListener(this);
         button2 = (Button) findViewById(R.id.button2);
         button2.setOnClickListener(this);
+        button3 = (Button)findViewById(R.id.button3);
+        button3.setOnClickListener(this);
         listView = (ListView) findViewById(R.id.list);
         label = (TextView) findViewById(R.id.textView1);
         label2 = (TextView) findViewById(R.id.textView2);
+        toggle = (ImageButton)findViewById(R.id.toggle);
+        toggle.setOnClickListener(this);
 
         updateLabels();
 
@@ -221,6 +227,10 @@ public class MainActivity extends Activity implements OnClickListener {
             adapter = new ArrayAdapter<String>(this,
                     android.R.layout.simple_list_item_1, android.R.id.text1, values);
             adapter.notifyDataSetChanged();
+
+            editText.setVisibility(View.INVISIBLE);
+            button.setVisibility(View.INVISIBLE);
+            toggle.setVisibility(View.VISIBLE);
         }
 
         if (v == button2) {
@@ -228,16 +238,23 @@ public class MainActivity extends Activity implements OnClickListener {
             startActivityForResult(i, 1);
         }
 
-    }
+        if (v == button3) {
+            Intent i = new Intent(this, Wishlist.class);
+            startActivityForResult(i, 1);
+        }
 
-    /** Called when the user clicks the Send button *//*
-    public void sendMessage(View view) {
-        Intent intent = new Intent(this, DisplayMessageActivity.class);
-        EditText editText = (EditText) findViewById(R.id.edit_message);
-        String message = editText.getText().toString();
-        intent.putExtra(EXTRA_MESSAGE, message);
-        startActivity(intent);
-    }*/
+        if (v == toggle) {
+            editText.setVisibility(View.VISIBLE);
+            button.setVisibility(View.VISIBLE);
+            toggle.setVisibility(View.INVISIBLE);
+        }
+/*
+        if (v == cancel) {
+            editText.setVisibility(View.INVISIBLE);
+            button.setVisibility(View.INVISIBLE);
+            toggle.setVisibility(View.VISIBLE);
+        }*/
+    }
 
 
     @Override

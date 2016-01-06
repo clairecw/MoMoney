@@ -37,6 +37,10 @@
             android:name=".SetBudget"
             android:label="@string/title_activity_set_budget" >
         </activity>
+        <activity
+            android:name=".Wishlist"
+            android:label="@string/title_activity_wishlist" >
+        </activity>
     </application>
 
 </manifest>

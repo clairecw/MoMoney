@@ -5,31 +5,26 @@
     android:orientation="vertical"
     tools:context=".MainActivity" >
 
-    <EditText
-        android:id="@+id/editText1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Enter description">
 
-        <requestFocus />
-    </EditText>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" >
-        <Button
-            android:id="@+id/button1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Save" />
+        android:orientation="horizontal"
+        android:gravity="center_horizontal">
 
         <Button
             android:id="@+id/button2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Budgeting" />
+
+        <Button
+            android:id="@+id/button3"
+            android:layout_width = "wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Wishlist"/>
 
     </LinearLayout>
 
@@ -50,6 +45,39 @@
         android:layout_height="wrap_content"
         android:layout_width="match_parent">
     </ListView>
+<!--
+    <Button
+        android:id="@+id/toggle"
+        android:text="Add+"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />-->
+
+    <ImageButton
+        android:id="@+id/toggle"
+        android:layout_width="@dimen/round_button_diameter"
+        android:layout_height="@dimen/round_button_diameter"
+        android:layout_gravity="end|bottom"
+        android:layout_marginBottom="@dimen/add_button_margin"
+        android:layout_marginEnd="@dimen/add_button_margin"
+        android:src="@android:drawable/ic_input_add"
+        android:tint="@android:color/white"
+        android:elevation="@dimen/elevation_low"/>
+
+    <EditText
+        android:id="@+id/editText1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter description"
+        android:visibility="invisible">
+        <requestFocus />
+    </EditText>
+
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save"
+        android:visibility="invisible"/>
 
 
 
