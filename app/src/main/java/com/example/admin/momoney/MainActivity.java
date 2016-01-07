@@ -35,7 +35,7 @@ public class MainActivity extends Activity implements OnClickListener {
     ImageButton toggle;
     ListView listView;
     String[] values;
-    TextView label, label2;                 // balance, monthly leftover
+    TextView label, label2, warning;                 // balance, monthly leftover, warning
     double balance, monthlyexp, leftover;
     String item;
     ArrayAdapter<String> adapter;
@@ -80,6 +80,7 @@ public class MainActivity extends Activity implements OnClickListener {
         toggle.setOnClickListener(this);
         cancel = (Button)findViewById(R.id.cancel);
         cancel.setOnClickListener(this);
+        warning = (TextView)findViewById(R.id.warning);
 
         updateLabels();
 
@@ -159,6 +160,9 @@ public class MainActivity extends Activity implements OnClickListener {
     private void updateLabels() {
         label.setText("Current balance: $" + df.format(balance));
         if (leftover != 0) label2.setText("Monthly leftover: $" + df.format(leftover) + " for a " + item);
+
+        if (balance < leftover)
+            warning.setText("Uh oh - you've overspent $" + df.format(Math.abs(balance - leftover)) + " this month!");
     }
 
     private void loadSavedPreferences() {
@@ -240,6 +244,7 @@ public class MainActivity extends Activity implements OnClickListener {
             adapter = new ArrayAdapter<String>(this,
                     android.R.layout.simple_list_item_1, android.R.id.text1, values);
             adapter.notifyDataSetChanged();
+            updateLabels();
 
             editText.setVisibility(View.INVISIBLE);
             button.setVisibility(View.INVISIBLE);
