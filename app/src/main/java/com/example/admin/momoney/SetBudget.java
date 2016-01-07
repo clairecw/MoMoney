@@ -14,9 +14,8 @@ import android.widget.EditText;
 
 public class SetBudget extends ActionBarActivity {
 
-    EditText foodexp, rentexp;
+    EditText foodexp, rentexp, income;
     Button button1;
-    String monthlyexp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,14 +25,12 @@ public class SetBudget extends ActionBarActivity {
         button1 = (Button)(findViewById(R.id.button1));
         foodexp = (EditText)(findViewById(R.id.foodexp));
         rentexp = (EditText)(findViewById(R.id.rentexp));
+        income = (EditText)(findViewById(R.id.income));
 
         button1.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                monthlyexp = "" + (Double.parseDouble(foodexp.getText().toString()) + Double.parseDouble(rentexp.getText().toString()));
-                setResult();/*
-                Intent intent = new Intent(v.getContext(), MainActivity.class);
-                startActivity(intent);
-                finish();*/
+                setResult("" + (Double.parseDouble(foodexp.getText().toString()) +
+                        Double.parseDouble(rentexp.getText().toString())) + " " + income.getText().toString());
             }
         });
 
@@ -63,10 +60,9 @@ public class SetBudget extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void setResult() {
-
+    public void setResult(String result) {
         Intent intent = new Intent();
-        intent.putExtra("expenses", monthlyexp);
+        intent.putExtra("result", result);
         setResult(RESULT_OK, intent);
         finish();
     }

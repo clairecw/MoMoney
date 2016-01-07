@@ -14,8 +14,8 @@ import android.widget.EditText;
 
 public class Wishlist extends ActionBarActivity implements View.OnClickListener {
 
-    Button button1;
-    EditText query;
+    Button button1, add;
+    EditText query, price, time;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,8 +24,12 @@ public class Wishlist extends ActionBarActivity implements View.OnClickListener 
 
         button1 = (Button)findViewById(R.id.search);
         query = (EditText)findViewById(R.id.item);
+        price = (EditText)findViewById(R.id.price);
+        add = (Button)findViewById(R.id.add);
+        time = (EditText)findViewById(R.id.time);
 
         button1.setOnClickListener(this);
+        add.setOnClickListener(this);
     }
 
 
@@ -52,13 +56,19 @@ public class Wishlist extends ActionBarActivity implements View.OnClickListener 
     }
 
     public void onClick(View v) {
-        /*Intent intent = new Intent(Intent.ACTION_WEB_SEARCH);
-        intent.putExtra(SearchManager.QUERY, query.getText().toString());
-        startActivity(intent);*/
+        if (v == button1) {
+            Uri uri = Uri.parse("https://www.google.com/#q=" + query.getText().toString() + "&tbm=shop");
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            startActivity(intent);
+        }
 
-        Uri uri = Uri.parse("https://www.google.com/#q=" + query.getText().toString() + "&tbm=shop");
-        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-        startActivity(intent);
+        if (v == add) {
+            Intent intent = new Intent();
+            intent.putExtra("wish item", query.getText().toString() + "  " + price.getText().toString()
+                            + "  " + time.getText().toString());
+            setResult(RESULT_OK, intent);
+            finish();
+        }
 
     }
 }

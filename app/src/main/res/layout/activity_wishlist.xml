@@ -11,6 +11,13 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Add a Wishlist Item"
+        android:paddingBottom="20dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="I want to save up for..." />
 
     <EditText
@@ -23,6 +30,52 @@
     <Button
         android:id="@+id/search"
         android:text="Search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:paddingTop="20dp">
+
+        <TextView
+            android:layout_width="130dp"
+            android:layout_height="wrap_content"
+            android:text="Price" />
+
+        <TextView
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:text="I want it within..." />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal">
+
+        <EditText
+            android:id="@+id/price"
+            android:hint="$"
+            android:inputType="number"
+            android:layout_width="130dp"
+            android:layout_height="wrap_content" />
+
+        <EditText
+            android:id="@+id/time"
+            android:hint="How many months?"
+            android:inputType="number"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/add"
+        android:text="Confirm"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 

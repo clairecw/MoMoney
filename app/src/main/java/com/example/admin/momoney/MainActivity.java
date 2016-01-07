@@ -31,14 +31,13 @@ import android.widget.Toast;
 public class MainActivity extends Activity implements OnClickListener {
     ArrayList<Due> dues;
     EditText editText;
-    Button button, button2, button3;        // send, setbudget, wishlist
+    Button button, button2, button3, cancel;        // send, setbudget, wishlist, cancel
     ImageButton toggle;
     ListView listView;
     String[] values;
-    TextView label, label2;
-    double balance;
-    double rentexp, foodexp, monthlyexp;
-    String test;
+    TextView label, label2;                 // balance, monthly leftover
+    double balance, monthlyexp, leftover;
+    String item;
     ArrayAdapter<String> adapter;
 
     DecimalFormat df = new DecimalFormat("#.00");
@@ -79,6 +78,8 @@ public class MainActivity extends Activity implements OnClickListener {
         label2 = (TextView) findViewById(R.id.textView2);
         toggle = (ImageButton)findViewById(R.id.toggle);
         toggle.setOnClickListener(this);
+        cancel = (Button)findViewById(R.id.cancel);
+        cancel.setOnClickListener(this);
 
         updateLabels();
 
@@ -112,14 +113,33 @@ public class MainActivity extends Activity implements OnClickListener {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1) {
+        if (requestCode == 1) {             // setbudget
             if (resultCode == RESULT_OK) {
-                String s = data.getStringExtra("expenses");
-                monthlyexp = Double.parseDouble(s);
+                String s = data.getStringExtra("result");
+                int index = s.indexOf(" ");
+                monthlyexp = Double.parseDouble(s.substring(0, index));
                 updateLabels();
-                savePreferences("expenses", s);
+                savePreferences("expenses", s.substring(0, index));
+                savePreferences("income", s.substring(index + 1));
             }
         }
+
+        if (requestCode == 2) {     // wishlist
+            if (resultCode == RESULT_OK) {
+                String s = data.getStringExtra("wish item");
+                savePreferences("wish item", s);
+                loadWish(s);
+                updateLabels();
+            }
+        }
+    }
+
+    private void loadWish(String s) {
+        int i1 = s.indexOf("  ");
+        item = s.substring(0, i1);
+        int i2 = s.lastIndexOf("  ");
+        leftover = Math.round(Double.parseDouble(s.substring(i1 + 1, i2)) /
+                    Double.parseDouble(s.substring(i2)));
     }
 
     private void updateList() {
@@ -138,26 +158,19 @@ public class MainActivity extends Activity implements OnClickListener {
 
     private void updateLabels() {
         label.setText("Current balance: $" + df.format(balance));
-        label2.setText("Monthly expenses: $" + df.format(monthlyexp));
+        if (leftover != 0) label2.setText("Monthly leftover: $" + df.format(leftover) + " for a " + item);
     }
 
     private void loadSavedPreferences() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-
-        //String name = sharedPreferences.getString("storedDues", "YourName");
-
-
         int size = sharedPreferences.getInt("Status_size", 0);
-
-        String name = sharedPreferences.getString("Status_" + 0, null);
-
 
         for(int i = 0; i < size; i++) {
             dues.add(unparse(sharedPreferences.getString("Status_" + i, null)));
         }
 
-        test = sharedPreferences.getString("expenses", null);
         monthlyexp = Double.parseDouble(sharedPreferences.getString("expenses", null));
+        loadWish(sharedPreferences.getString("wish item", null));
     }
 
     private void loadSavedPreferences(String key) {
@@ -231,6 +244,7 @@ public class MainActivity extends Activity implements OnClickListener {
             editText.setVisibility(View.INVISIBLE);
             button.setVisibility(View.INVISIBLE);
             toggle.setVisibility(View.VISIBLE);
+            cancel.setVisibility(View.INVISIBLE);
         }
 
         if (v == button2) {
@@ -240,20 +254,22 @@ public class MainActivity extends Activity implements OnClickListener {
 
         if (v == button3) {
             Intent i = new Intent(this, Wishlist.class);
-            startActivityForResult(i, 1);
+            startActivityForResult(i, 2);
         }
 
         if (v == toggle) {
             editText.setVisibility(View.VISIBLE);
             button.setVisibility(View.VISIBLE);
             toggle.setVisibility(View.INVISIBLE);
+            cancel.setVisibility(View.VISIBLE);
         }
-/*
+
         if (v == cancel) {
             editText.setVisibility(View.INVISIBLE);
             button.setVisibility(View.INVISIBLE);
             toggle.setVisibility(View.VISIBLE);
-        }*/
+            cancel.setVisibility(View.INVISIBLE);
+        }
     }
 
 
