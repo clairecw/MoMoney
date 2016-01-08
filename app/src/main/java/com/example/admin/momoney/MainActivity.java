@@ -30,7 +30,7 @@ import android.widget.Toast;
 
 public class MainActivity extends Activity implements OnClickListener {
     ArrayList<Due> dues;
-    EditText editText;
+    EditText editText, price;
     Button button, button2, button3, cancel;        // send, setbudget, wishlist, cancel
     ImageButton toggle;
     ListView listView;
@@ -55,14 +55,10 @@ public class MainActivity extends Activity implements OnClickListener {
 
         dues = new ArrayList<Due>();
         balance = 0;
+        monthlyexp = 0;
+        leftover = 0;
 
         loadSavedPreferences();
-
-        if (DEBUGGING) {
-            dues.add(new Due(50, "ass"));
-            dues.add(new Due(60, "nose"));
-            dues.add(new Due(2, "candy"));
-        }
 
         updateList();
 
@@ -81,6 +77,7 @@ public class MainActivity extends Activity implements OnClickListener {
         cancel = (Button)findViewById(R.id.cancel);
         cancel.setOnClickListener(this);
         warning = (TextView)findViewById(R.id.warning);
+        price = (EditText)findViewById(R.id.price);
 
         updateLabels();
 
@@ -96,12 +93,10 @@ public class MainActivity extends Activity implements OnClickListener {
                 // ListView Clicked item index
                 int itemPosition = position;
 
-                // ListView Clicked item value
-                String itemValue = (String) listView.getItemAtPosition(position);
-
                 // Show Alert
                 Toast.makeText(getApplicationContext(),
-                        "Position :" + itemPosition + "  ListItem : " + itemValue, Toast.LENGTH_SHORT)
+                        "Item #" + (itemPosition + 1) + ": " + dues.get(itemPosition).getDesc()
+                        + " " + dues.get(itemPosition).getDate(), Toast.LENGTH_SHORT)
                         .show();
 
             }
@@ -163,18 +158,22 @@ public class MainActivity extends Activity implements OnClickListener {
 
         if (balance < leftover)
             warning.setText("Uh oh - you've overspent $" + df.format(Math.abs(balance - leftover)) + " this month!");
+
+        if (adapter != null) adapter.notifyDataSetChanged();
     }
 
     private void loadSavedPreferences() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         int size = sharedPreferences.getInt("Status_size", 0);
 
-        for(int i = 0; i < size; i++) {
+        for (int i = 0; i < size; i++) {
             dues.add(unparse(sharedPreferences.getString("Status_" + i, null)));
         }
 
-        monthlyexp = Double.parseDouble(sharedPreferences.getString("expenses", null));
-        loadWish(sharedPreferences.getString("wish item", null));
+        if (sharedPreferences.getString("expenses", null) != null)
+            monthlyexp = Double.parseDouble(sharedPreferences.getString("expenses", null));
+        if (sharedPreferences.getString("wish item", null) != null)
+            loadWish(sharedPreferences.getString("wish item", null));
     }
 
     private void loadSavedPreferences(String key) {
@@ -208,7 +207,9 @@ public class MainActivity extends Activity implements OnClickListener {
     private String fancyParse(Due d) {
         String s = "";
         if (d.getAmt() < 0) s += "-";
-        s += "$" + df.format(Math.abs(d.getAmt())) + " " + d.getDesc();
+        else s += "+";
+        //s += "$" + df.format(Math.abs(d.getAmt())) + d.getDesc();
+        s += String.format("%10s%30s", "$" + df.format(Math.abs(d.getAmt())), d.getDesc());
         return s;
     }
 
@@ -222,7 +223,8 @@ public class MainActivity extends Activity implements OnClickListener {
         int ind = s.indexOf(" ");
         double n = Double.parseDouble(s.substring(0, ind));
         String d = s.substring(ind);
-        return new Due(n, d);
+        Calendar cdt = Calendar.getInstance();
+        return new Due(n, d, cdt.get(Calendar.MONTH) + 1, cdt.get(Calendar.DAY_OF_MONTH), cdt.get(Calendar.YEAR));
     }
 
     private void savePreferences(String key, String value) {
@@ -241,12 +243,11 @@ public class MainActivity extends Activity implements OnClickListener {
             savePreferences();
             updateList();
 
-            adapter = new ArrayAdapter<String>(this,
-                    android.R.layout.simple_list_item_1, android.R.id.text1, values);
             adapter.notifyDataSetChanged();
             updateLabels();
 
             editText.setVisibility(View.INVISIBLE);
+            price.setVisibility(View.INVISIBLE);
             button.setVisibility(View.INVISIBLE);
             toggle.setVisibility(View.VISIBLE);
             cancel.setVisibility(View.INVISIBLE);
@@ -264,6 +265,7 @@ public class MainActivity extends Activity implements OnClickListener {
 
         if (v == toggle) {
             editText.setVisibility(View.VISIBLE);
+            price.setVisibility(View.VISIBLE);
             button.setVisibility(View.VISIBLE);
             toggle.setVisibility(View.INVISIBLE);
             cancel.setVisibility(View.VISIBLE);
@@ -271,6 +273,7 @@ public class MainActivity extends Activity implements OnClickListener {
 
         if (v == cancel) {
             editText.setVisibility(View.INVISIBLE);
+            price.setVisibility(View.INVISIBLE);
             button.setVisibility(View.INVISIBLE);
             toggle.setVisibility(View.VISIBLE);
             cancel.setVisibility(View.INVISIBLE);
@@ -304,10 +307,14 @@ public class MainActivity extends Activity implements OnClickListener {
 class Due {
     private double amount;
     private String desc;
+    private int month, day, year;
 
-    public Due(double a, String d) {
+    public Due(double a, String d, int mm, int dd, int yy) {
         amount = a;
         desc = d;
+        month = mm;
+        day = dd;
+        year = yy;
     }
 
     public double getAmt() {
@@ -316,5 +323,9 @@ class Due {
 
     public String getDesc() {
         return desc;
+    }
+
+    public String getDate() {
+        return "" + month + "/" + day + "/" + year;
     }
 }
