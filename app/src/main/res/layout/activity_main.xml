@@ -53,69 +53,90 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-    <ListView
-        android:id="@+id/list"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent">
-    </ListView>
-<!--
-    <Button
-        android:id="@+id/toggle"
-        android:text="Add+"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />-->
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:gravity="end">
 
-    <ImageButton
-        android:id="@+id/toggle"
-        android:layout_width="@dimen/round_button_diameter"
-        android:layout_height="@dimen/round_button_diameter"
-        android:layout_gravity="end|bottom"
-        android:layout_marginBottom="@dimen/add_button_margin"
-        android:layout_marginEnd="@dimen/add_button_margin"
-        android:src="@android:drawable/ic_input_add"
-        android:tint="@android:color/white"
-        android:elevation="@dimen/elevation_low"/>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal">
-
-        <EditText
-            android:id="@+id/price"
-            android:hint="$"
-            android:inputType="number"
-            android:layout_width="130dp"
+        <ListView
+            android:id="@+id/list"
             android:layout_height="wrap_content"
-            android:visibility="invisible"/>
+            android:layout_width="match_parent">
+        </ListView>
 
-        <EditText
-            android:id="@+id/editText1"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:hint="Enter description"
-            android:visibility="invisible"
-            android:layout_marginRight="20dp"
-            android:layout_marginLeft="20dp">
-        </EditText>
-    </LinearLayout>
+        <ImageButton
+            android:id="@+id/toggle"
+            android:layout_width="@dimen/round_button_diameter"
+            android:layout_height="@dimen/round_button_diameter"
+            android:layout_gravity="end|bottom"
+            android:layout_marginBottom="@dimen/add_button_margin"
+            android:layout_marginEnd="@dimen/add_button_margin"
+            android:src="@android:drawable/ic_input_add"
+            android:tint="@android:color/white"
+            android:elevation="@dimen/elevation_low"
+            android:layout_below="@id/list"/>
 
-    <Button
-        android:id="@+id/button1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Save"
-        android:visibility="invisible"
-        android:layout_marginLeft="20dp"/>
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-    <Button
-        android:id="@+id/cancel"
-        android:text="Cancel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="invisible"
-        android:layout_marginLeft="20dp"/>
+            <LinearLayout
+                android:id="@+id/options"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="10dp"
+                android:background="#00FFFFFF">
+
+                <EditText
+                    android:id="@+id/price"
+                    android:hint="$"
+                    android:inputType="numberDecimal|numberSigned"
+                    android:layout_width="130dp"
+                    android:layout_height="wrap_content"
+                    android:visibility="invisible"/>
+
+                <EditText
+                    android:id="@+id/editText1"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:hint="Enter description"
+                    android:visibility="invisible"
+                    android:layout_marginRight="20dp">
+                </EditText>
+            </LinearLayout>
+
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/submit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="#00FFFFFF">
+                <Button
+                    android:id="@+id/button1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Save"
+                    android:visibility="invisible"
+                    android:layout_marginLeft="20dp"/>
+
+                <Button
+                    android:id="@+id/cancel"
+                    android:text="Cancel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="invisible"
+                    android:layout_marginLeft="20dp"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
 
 
 

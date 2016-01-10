@@ -1,6 +1,7 @@
 package com.example.admin.momoney;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -22,6 +23,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
@@ -39,6 +41,8 @@ public class MainActivity extends Activity implements OnClickListener {
     double balance, monthlyexp, leftover;
     String item;
     ArrayAdapter<String> adapter;
+
+    LinearLayout optionsView, submitView;
 
     DecimalFormat df = new DecimalFormat("#.00");
     boolean DEBUGGING = false;
@@ -78,6 +82,9 @@ public class MainActivity extends Activity implements OnClickListener {
         cancel.setOnClickListener(this);
         warning = (TextView)findViewById(R.id.warning);
         price = (EditText)findViewById(R.id.price);
+
+        optionsView = (LinearLayout)findViewById(R.id.options);
+        submitView = (LinearLayout)findViewById(R.id.submit);
 
         updateLabels();
 
@@ -190,7 +197,7 @@ public class MainActivity extends Activity implements OnClickListener {
     }
 
     private void savePreferences() {
-        dues.add(unparse(editText.getText().toString()));
+        dues.add(unparse(price.getText().toString() + " " + editText.getText().toString()));
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = sp.edit();
@@ -208,8 +215,7 @@ public class MainActivity extends Activity implements OnClickListener {
         String s = "";
         if (d.getAmt() < 0) s += "-";
         else s += "+";
-        //s += "$" + df.format(Math.abs(d.getAmt())) + d.getDesc();
-        s += String.format("%10s%30s", "$" + df.format(Math.abs(d.getAmt())), d.getDesc());
+        s += String.format("%10s%-30s", "$" + df.format(Math.abs(d.getAmt())), d.getDesc());
         return s;
     }
 
@@ -234,6 +240,28 @@ public class MainActivity extends Activity implements OnClickListener {
         editor.commit();
     }
 
+    private void showOptions() {
+        editText.setVisibility(View.VISIBLE);
+        price.setVisibility(View.VISIBLE);
+        button.setVisibility(View.VISIBLE);
+        toggle.setVisibility(View.INVISIBLE);
+        cancel.setVisibility(View.VISIBLE);
+
+        optionsView.setBackgroundColor(Color.parseColor("#FFFFFF"));
+        submitView.setBackgroundColor(Color.parseColor("#FFFFFF"));
+    }
+
+    private void hideOptions() {
+        editText.setVisibility(View.INVISIBLE);
+        price.setVisibility(View.INVISIBLE);
+        button.setVisibility(View.INVISIBLE);
+        toggle.setVisibility(View.VISIBLE);
+        cancel.setVisibility(View.INVISIBLE);
+
+        optionsView.setBackgroundColor(Color.parseColor("#00FFFFFF"));
+        submitView.setBackgroundColor(Color.parseColor("#00FFFFFF"));
+    }
+
     @Override
     public void onClick(View v) {
         // TODO Auto-generated method stub
@@ -246,11 +274,7 @@ public class MainActivity extends Activity implements OnClickListener {
             adapter.notifyDataSetChanged();
             updateLabels();
 
-            editText.setVisibility(View.INVISIBLE);
-            price.setVisibility(View.INVISIBLE);
-            button.setVisibility(View.INVISIBLE);
-            toggle.setVisibility(View.VISIBLE);
-            cancel.setVisibility(View.INVISIBLE);
+            hideOptions();
         }
 
         if (v == button2) {
@@ -264,19 +288,11 @@ public class MainActivity extends Activity implements OnClickListener {
         }
 
         if (v == toggle) {
-            editText.setVisibility(View.VISIBLE);
-            price.setVisibility(View.VISIBLE);
-            button.setVisibility(View.VISIBLE);
-            toggle.setVisibility(View.INVISIBLE);
-            cancel.setVisibility(View.VISIBLE);
+            showOptions();
         }
 
         if (v == cancel) {
-            editText.setVisibility(View.INVISIBLE);
-            price.setVisibility(View.INVISIBLE);
-            button.setVisibility(View.INVISIBLE);
-            toggle.setVisibility(View.VISIBLE);
-            cancel.setVisibility(View.INVISIBLE);
+            hideOptions();
         }
     }
 
