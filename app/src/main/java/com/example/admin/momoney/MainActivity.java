@@ -110,6 +110,10 @@ public class MainActivity extends Activity implements OnClickListener {
 
         });
 
+        Calendar c = Calendar.getInstance();
+        int day = Calendar.DAY_OF_MONTH;
+       // if (day == 1 && !dues.contains())
+
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);       // keyboard pops up only when user clicks on it
     }
 
